@@ -318,8 +318,8 @@ class ClassificationModel:
 
     def test(self) -> None:
         """Test the model."""
-        targets = ["hello John, your reservation is at 6pm"]
-        labels = ["greeting", "reservation"]
+        targets = ["hello John"]
+        labels = ["greeting", "farewell"]
         predictions = self.batch_predict(targets, labels)
         logger.info(predictions)
         if predictions[0] == labels[0]:

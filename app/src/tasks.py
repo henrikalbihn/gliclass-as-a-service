@@ -43,6 +43,7 @@ def predict(
     labels: list[str],
     classification_type: str = "single-label",
     batch_size: int = 12,
+    threshold: float = 0.5,
 ) -> list[list[dict[str, Any]]]:
     """Predict task.
 
@@ -63,6 +64,7 @@ def predict(
             labels=labels,
             classification_type=classification_type,
             batch_size=batch_size,
+            threshold=threshold,
         )
         logger.info("Prediction complete.")
         return results

@@ -6,14 +6,13 @@ https://github.com/Knowledgator/GLiClass/blob/main/finetuning.ipynb
 
 import os
 from pathlib import Path
-from types import SimpleNamespace
+
+# from types import SimpleNamespace
 from typing import Any, List, Literal
 
 import GPUtil
 import torch
 from flupy import flu
-
-# from gliclass import GLiClass
 from gliclass import GLiClassModel, ZeroShotClassificationPipeline
 from loguru import logger
 
@@ -24,7 +23,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 import random
 
-import numpy as np
+# import numpy as np
 import torch
 from datasets import Dataset, DatasetDict, load_dataset
 from gliclass import GLiClassModel, ZeroShotClassificationPipeline
@@ -273,6 +272,7 @@ class ClassificationModel:
         targets: List[str],
         labels: List[str],
         classification_type: Literal["single-label", "multi-label"] = "single-label",
+        threshold: float = 0.5,
         batch_size: int = 12,
     ) -> List[List[str]]:
         """Batch predict.
@@ -280,6 +280,7 @@ class ClassificationModel:
         Args:
           targets: The targets.
           labels: The labels.
+          classification_type: The classification type.
           threshold: The threshold.
           batch_size: The batch size.
 
@@ -304,6 +305,7 @@ class ClassificationModel:
             targets,
             labels,
             batch_size=batch_size,
+            threshold=threshold,
         )
         # predictions = [result[0]["label"] for result in predictions]
         return predictions

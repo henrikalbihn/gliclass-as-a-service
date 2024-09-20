@@ -47,7 +47,7 @@ async def predict_endpoint(
     """Predict the named entities in the input text."""
     logger.debug(f"Request:\n\n{request}")
     logger.info(f"Object:\n\n{predict_request}")
-    task_id = predict.delay(**predict_request.dict())
+    task_id = predict.delay(**predict_request.model_dump())
     return JSONResponse(
         status_code=202,
         content={

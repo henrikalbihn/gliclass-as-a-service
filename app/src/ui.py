@@ -181,6 +181,7 @@ App Details:
         labels: list[str] = ["O"],
         classification_type: str = "single-label",
         batch_size: int = 12,
+        threshold: float = 0.5,
     ) -> None:
         """Predict."""
 
@@ -196,6 +197,7 @@ App Details:
                     labels=labels,
                     classification_type=classification_type,
                     batch_size=batch_size,
+                    threshold=threshold,
                 ).model_dump()
                 r = await client.post(
                     f"{BACKEND_HOST}/predict",

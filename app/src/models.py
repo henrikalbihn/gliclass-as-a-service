@@ -42,3 +42,4 @@ class PredictRequest(BaseModel):
 
     classification_type: str = "single-label"
     batch_size: int = 12
+    threshold: float = 0.5

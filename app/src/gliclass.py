@@ -6,36 +6,30 @@ https://github.com/Knowledgator/GLiClass/blob/main/finetuning.ipynb
 
 import os
 from pathlib import Path
-
-# from types import SimpleNamespace
 from typing import Any, List, Literal
 
 import GPUtil
 import torch
-
-# from datasets import Dataset, DatasetDict, load_dataset
-from flupy import flu
 from gliclass import GLiClassModel, ZeroShotClassificationPipeline
 from loguru import logger
-
-# from tqdm import tqdm
 from transformers import AutoTokenizer
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
-import random
-
+# import random
+# import numpy as np
+# from types import SimpleNamespace
+# from datasets import Dataset, DatasetDict, load_dataset
+# from tqdm import tqdm
+# from flupy import flu
 # from gliclass.data_processing import DataCollatorWithPadding, GLiClassDataset
 # from gliclass.training import Trainer, TrainingArguments
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    f1_score,
-    precision_recall_fscore_support,
-)
-from transformers import AutoTokenizer
-
-# import numpy as np
+# from sklearn.metrics import (
+#     accuracy_score,
+#     classification_report,
+#     f1_score,
+#     precision_recall_fscore_support,
+# )
 
 
 try:
@@ -58,8 +52,7 @@ MODELS = {
 }
 """
 available models:
-  - https://huggingface.co/urchade
-  - https://huggingface.co/collections/numind/nunerzero-zero-shot-ner-662b59803b9b438ff56e49e2
+  - https://huggingface.co/collections/knowledgator/gliclass-6661838823756265f2ac3848
 """
 
 DEFAULT_MODEL = "GLiClass-S"

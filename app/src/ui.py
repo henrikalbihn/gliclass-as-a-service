@@ -179,7 +179,7 @@ App Details:
         self,
         targets: list[str] = ["hello world"],
         labels: list[str] = ["O"],
-        classification_type: str = "single-class",
+        classification_type: str = "single-label",
         batch_size: int = 12,
     ) -> None:
         """Predict."""
@@ -257,7 +257,7 @@ App Details:
             with c1:
                 classification_type = st.selectbox(
                     "classification type",
-                    options=["single-class", "multi-class"],
+                    options=["single-label", "multi-label"],
                     index=0,
                 )
 

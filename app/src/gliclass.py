@@ -12,21 +12,18 @@ from typing import Any, List, Literal
 
 import GPUtil
 import torch
+
+# from datasets import Dataset, DatasetDict, load_dataset
 from flupy import flu
 from gliclass import GLiClassModel, ZeroShotClassificationPipeline
 from loguru import logger
 
 # from tqdm import tqdm
-from transformers import AutoTokenizer, get_cosine_schedule_with_warmup
+from transformers import AutoTokenizer
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 import random
-
-# import numpy as np
-import torch
-from datasets import Dataset, DatasetDict, load_dataset
-from gliclass import GLiClassModel, ZeroShotClassificationPipeline
 
 # from gliclass.data_processing import DataCollatorWithPadding, GLiClassDataset
 # from gliclass.training import Trainer, TrainingArguments
@@ -37,6 +34,9 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
 )
 from transformers import AutoTokenizer
+
+# import numpy as np
+
 
 try:
     # Try to enable hf_transfer if available
@@ -68,78 +68,78 @@ DEFAULT_MODEL = "GLiClass-S"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def evaluate(predicts, true_labels):
-    micro = f1_score(true_labels, predicts, average="micro")
-    macro = f1_score(true_labels, predicts, average="macro")
-    weighted = f1_score(true_labels, predicts, average="weighted")
-    return {"micro": micro, "macro": macro, "weighted": weighted}
+# def evaluate(predicts, true_labels):
+#     micro = f1_score(true_labels, predicts, average="micro")
+#     macro = f1_score(true_labels, predicts, average="macro")
+#     weighted = f1_score(true_labels, predicts, average="weighted")
+#     return {"micro": micro, "macro": macro, "weighted": weighted}
 
 
-def get_train_dataset(dataset, N, label_column="label"):
-    ids = []
-    label2count = {}
-    train_dataset = dataset.shuffle(seed=41)
-    for id, example in enumerate(train_dataset):
-        if example[label_column] not in label2count:
-            label2count[example[label_column]] = 1
-        elif label2count[example[label_column]] >= N:
-            continue
-        else:
-            label2count[example[label_column]] += 1
-        ids.append(id)
-    return train_dataset.select(ids)
+# def get_train_dataset(dataset, N, label_column="label"):
+#     ids = []
+#     label2count = {}
+#     train_dataset = dataset.shuffle(seed=41)
+#     for id, example in enumerate(train_dataset):
+#         if example[label_column] not in label2count:
+#             label2count[example[label_column]] = 1
+#         elif label2count[example[label_column]] >= N:
+#             continue
+#         else:
+#             label2count[example[label_column]] += 1
+#         ids.append(id)
+#     return train_dataset.select(ids)
 
 
-def prepare_dataset(
-    dataset,
-    classes=None,
-    text_column="text",
-    label_column="label",
-    split=None,
-):
-    if "test" in dataset:
-        test_dataset = dataset["test"]
-    elif isinstance(dataset, Dataset):
-        test_dataset = dataset
-    else:
-        test_dataset = dataset["train"]
+# def prepare_dataset(
+#     dataset,
+#     classes=None,
+#     text_column="text",
+#     label_column="label",
+#     split=None,
+# ):
+#     if "test" in dataset:
+#         test_dataset = dataset["test"]
+#     elif isinstance(dataset, Dataset):
+#         test_dataset = dataset
+#     else:
+#         test_dataset = dataset["train"]
 
-    if classes is None:
-        classes = test_dataset.features[label_column].names
-        if split is not None:
-            classes = [" ".join(class_.split(split)) for class_ in classes]
+#     if classes is None:
+#         classes = test_dataset.features[label_column].names
+#         if split is not None:
+#             classes = [" ".join(class_.split(split)) for class_ in classes]
 
-    texts = test_dataset[text_column]
+#     texts = test_dataset[text_column]
 
-    true_labels = test_dataset[label_column]
+#     true_labels = test_dataset[label_column]
 
-    print(classes)
-    if type(test_dataset[label_column][0]) == int:
-        true_labels = [classes[label] for label in true_labels]
+#     print(classes)
+#     if type(test_dataset[label_column][0]) == int:
+#         true_labels = [classes[label] for label in true_labels]
 
-    return texts, classes, true_labels
+#     return texts, classes, true_labels
 
 
-def prepare_dataset_for_training(
-    train_dataset,
-    classes,
-    text_column="text",
-    label_column="label",
-):
-    id2class = {id: class_ for id, class_ in enumerate(classes)}
-    dataset = []
-    for example in train_dataset:
-        label = example[label_column]
-        if type(label) == int:
-            label = id2class[label]
-        item = {
-            "text": example[text_column],
-            "all_labels": classes,
-            "true_labels": [label],
-        }
-        dataset.append(item)
-    random.shuffle(dataset)
-    return dataset
+# def prepare_dataset_for_training(
+#     train_dataset,
+#     classes,
+#     text_column="text",
+#     label_column="label",
+# ):
+#     id2class = {id: class_ for id, class_ in enumerate(classes)}
+#     dataset = []
+#     for example in train_dataset:
+#         label = example[label_column]
+#         if type(label) == int:
+#             label = id2class[label]
+#         item = {
+#             "text": example[text_column],
+#             "all_labels": classes,
+#             "true_labels": [label],
+#         }
+#         dataset.append(item)
+#     random.shuffle(dataset)
+#     return dataset
 
 
 class ClassificationModel:

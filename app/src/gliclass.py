@@ -165,7 +165,7 @@ class ClassificationModel:
             local_model_path = Path(name).resolve()
         else:
             local_model_path = (workdir / local_model_path).resolve()
-        if local_model_path.exists():
+        if Path(local_model_path).exists():
             import warnings
 
             warnings.warn(f"Model path already exists: {str(local_model_path)}")
@@ -202,7 +202,7 @@ class ClassificationModel:
           model_path: The model path.
         """
         try:
-            local_model_path = str(self.local_model_path.resolve())
+            local_model_path = str(Path(self.local_model_path).resolve())
             self.model = GLiClassModel.from_pretrained(
                 local_model_path,
                 local_files_only=True,
